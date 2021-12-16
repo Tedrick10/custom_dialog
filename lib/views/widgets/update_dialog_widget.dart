@@ -36,6 +36,7 @@ class UpdateDialogWidget extends StatefulWidget {
 
 class _UpdateDialogWidgetState extends State<UpdateDialogWidget> {
   // Final: Class Properties
+  final GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final String _nameLabelText = "Name";
   final String _nameHintText = "Enter name";
@@ -98,26 +99,42 @@ class _UpdateDialogWidgetState extends State<UpdateDialogWidget> {
       context,
       listen: false,
     );
-    final String _programmerName = _nameController.text;
-    final String _programmingLanguage = _currentProgrammingLanguage;
-    final String _startedDateTime = _dateTimeController.text;
-    final bool _isExpert = _switchCurrentValue;
 
-    ProgrammerModel updatedProgrammer = ProgrammerModel(
-      name: _programmerName,
-      programmingLanguage: _programmingLanguage,
-      startedDateTime: _startedDateTime,
-      isExpert: _isExpert,
-    );
+    if (_globalKey.currentState!.validate()) {
+      // Final: Method Properties
+      final String _programmerName = _nameController.text;
+      final String _programmingLanguage = _currentProgrammingLanguage;
+      final String _startedDateTime = _dateTimeController.text;
+      final bool _isExpert = _switchCurrentValue;
 
-    _programmerProvider.updateProgrammer(widget.index, updatedProgrammer);
-    Navigator.pop(context);
+      // Create Programmer Model To Update
+      ProgrammerModel updatedProgrammer = ProgrammerModel(
+        name: _programmerName,
+        programmingLanguage: _programmingLanguage,
+        startedDateTime: _startedDateTime,
+        isExpert: _isExpert,
+      );
+
+      // Update Existing Programmer
+      _programmerProvider.updateProgrammer(widget.index, updatedProgrammer);
+
+      // Close Dialog
+      Navigator.pop(context);
+    }
   }
 
   // Validation: Class Methods
   String? _nameValidation(String? enteredName) {
     if (enteredName == null || enteredName == "") {
-      return "Please enter some text";
+      return "Please enter name.";
+    }
+
+    return null;
+  }
+
+  String? _dateValidation(String? dateValidation) {
+    if (dateValidation == null || dateValidation.trim().isEmpty) {
+      return "Please enter date.";
     }
 
     return null;
@@ -128,38 +145,42 @@ class _UpdateDialogWidgetState extends State<UpdateDialogWidget> {
   Widget build(BuildContext context) {
     // Returning Widgets
     return Container(
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            InputFieldWidget(
-              initialValue: "",
-              controller: _nameController,
-              labelText: _nameLabelText,
-              hintText: _nameHintText,
-              validationFunction: _nameValidation,
-            ),
-            DropdownWidget(
-              currentValue: _currentProgrammingLanguage,
-              itemList: _programmingLanguagesList,
-              function: _changeProgrammingLanguage,
-            ),
-            DateTimeFieldWidget(
-              controller: _dateTimeController,
-              labelText: _dateTimeLabelText,
-              hintText: _dateTimeHintText,
-            ),
-            SwitchWidget(
-              title: _switchTitle,
-              value: _switchCurrentValue,
-              function: _toggleSwitch,
-            ),
-            ActionButtonWidget(
-              title: _buttonTitle,
-              function: updateProgrammer,
-            ),
-          ],
+      child: Form(
+        key: _globalKey,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              InputFieldWidget(
+                initialValue: "",
+                controller: _nameController,
+                labelText: _nameLabelText,
+                hintText: _nameHintText,
+                validationFunction: _nameValidation,
+              ),
+              DropdownWidget(
+                currentValue: _currentProgrammingLanguage,
+                itemList: _programmingLanguagesList,
+                function: _changeProgrammingLanguage,
+              ),
+              DateTimeFieldWidget(
+                controller: _dateTimeController,
+                labelText: _dateTimeLabelText,
+                hintText: _dateTimeHintText,
+                validation: _dateValidation,
+              ),
+              SwitchWidget(
+                title: _switchTitle,
+                value: _switchCurrentValue,
+                function: _toggleSwitch,
+              ),
+              ActionButtonWidget(
+                title: _buttonTitle,
+                function: updateProgrammer,
+              ),
+            ],
+          ),
         ),
       ),
       width: 700.0,

@@ -32,9 +32,7 @@ class TableWidget extends StatelessWidget {
           const Divider(
             color: Colors.black,
           ),
-          const SingleChildScrollView(
-            child: TableBodyWidget(),
-          )
+          const TableBodyWidget(),
         ],
       ),
     );

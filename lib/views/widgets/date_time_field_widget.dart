@@ -13,12 +13,14 @@ class DateTimeFieldWidget extends StatefulWidget {
   final TextEditingController controller;
   final String labelText;
   final String hintText;
+  final String? Function(String?)? validation;
 
   // Constructor
   const DateTimeFieldWidget({
     required this.controller,
     required this.labelText,
     required this.hintText,
+    required this.validation,
     Key? key,
   }) : super(key: key);
 
@@ -41,6 +43,7 @@ class _DateTimeFieldWidgetState extends State<DateTimeFieldWidget> {
         // cursorColor: const Color(0xff784FFE),
         cursorColor: Colors.lightBlue,
         controller: widget.controller,
+        validator: widget.validation,
         decoration: InputDecoration(
           suffixIcon: IconButton(
             onPressed: () async {

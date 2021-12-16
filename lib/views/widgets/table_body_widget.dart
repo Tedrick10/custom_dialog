@@ -80,33 +80,34 @@ class TableBodyWidget extends StatelessWidget {
         _programmerProvider.getProgrammersList();
 
     // Returning Widgets
-    return SizedBox(
-      width: double.infinity,
-      child: Column(
-        children: [
-          for (int i = 0; i < _programmersList.length; i++) ...[
-            InkWell(
-              onTap: () {
-                _onClickedButton(context, i, _programmersList[i]);
-              },
-              child: Row(
-                children: [
-                  _tableCell((i + 1).toString()),
-                  _tableCell(_programmersList[i].name),
-                  _tableCell(_programmersList[i].programmingLanguage),
-                  _tableCell(_programmersList[i].startedDateTime),
-                  _tableCell(
-                    _programmersList[i].isExpert ? "Yes" : "No",
-                  ),
-                  DeleteButtonWidget(function: () {
-                    _deleteProgrammer(context, i);
-                  }),
-                ],
+    return Expanded(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            for (int i = 0; i < _programmersList.length; i++) ...[
+              InkWell(
+                onTap: () {
+                  _onClickedButton(context, i, _programmersList[i]);
+                },
+                child: Row(
+                  children: [
+                    _tableCell((i + 1).toString()),
+                    _tableCell(_programmersList[i].name),
+                    _tableCell(_programmersList[i].programmingLanguage),
+                    _tableCell(_programmersList[i].startedDateTime),
+                    _tableCell(
+                      _programmersList[i].isExpert ? "Yes" : "No",
+                    ),
+                    DeleteButtonWidget(function: () {
+                      _deleteProgrammer(context, i);
+                    }),
+                  ],
+                ),
               ),
-            ),
-            const Divider(),
+              const Divider(),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
